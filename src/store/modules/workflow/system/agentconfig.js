@@ -1,7 +1,7 @@
 import { getList } from '@/api/workflow/system/agentconfig'
 
 const state = {
-  list: [] // 代办配置数据
+  list: {} // 代办配置数据
 }
 
 const mutations = {
@@ -16,7 +16,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getList(payload).then(response => {
         console.log(response)
-        commit('setData', response.ResponseBody.RetList)
+        commit('setData', response.ResponseBody)
         resolve()
       }).catch(error => {
         reject(error)

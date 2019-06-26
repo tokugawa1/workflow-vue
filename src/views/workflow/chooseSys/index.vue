@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg_container">
     <el-card>
       <div slot="header">
         <span>请选择接入系统</span>
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       imgUrl1: img1,
-	  imgUrl2: img2,
+	    imgUrl2: img2,
     }
   },
   computed: {
@@ -36,11 +36,11 @@ export default {
 	  this.$store.dispatch('chooseSys/getList')
   },
   methods: {
-	turnHome(){
-		this.$router.push({
-			path: '/'
-		})
-	}
+    turnHome(){
+      this.$router.push({
+        path: '/'
+      })
+    }
   }
 }
 </script>

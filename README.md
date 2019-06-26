@@ -264,6 +264,104 @@ npm run lint -- --fix
         }
       },
 
+## 7.清空表单的值
+    <1>.使用vue.$set(obj, key, value)去清空表单的值，使用element的this.$refs[fieldsName].resetFields(),只能回到默认值，如果有默认值，就不能清空      
+
+    <2>.举例:
+      <el-form-item label="开始时间:" label-width='150px' prop="beginTime">
+        <el-input 
+          v-model="ruleForm.beginTime" 
+        />
+      </el-form-item>
+
+      data() {
+        return {
+          ruleForm: {
+            beginTime: '2019-04-12',
+          },
+        }
+      },
+
+    使用this.$refs[fieldsName].resetFields(),这时显示的值还是"2019-04-12"      
+    使用this.$set(this.ruleForm, 'beginTime', ''), 这时显示的就是空值
+
+## 8.该项目默认是英文的版本，所以要改为中文
+    <1>.在src/main.js里：
+      删除import locale from 'element-ui/lib/locale/lang/en'，    
+      Vue.use(ElementUI, { locale })，修改为Vue.use(ElementUI)    
+
+## 9.将el-date-picker的时间快捷选择封装
+    <1>.在src/utils/index.js里，写入:
+        export const pickerOptions = {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+          shortcuts: [
+            {
+              text: '今天',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                picker.$emit('pick', [start, end]);
+              }
+            },
+            {
+              text: '昨天',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24);
+                picker.$emit('pick', [start, end]);
+              }
+            },
+            {
+            text: '一周前',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit('pick', [start, end]);
+              }
+            },
+            {
+              text: '最近一个月',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                picker.$emit('pick', [start, end]);
+              }
+            },
+            {
+              text: '最近三个月',
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                picker.$emit('pick', [start, end]);
+              }
+            }
+          ]
+        }
+
+    <2>.在页面中引用:
+        <el-date-picker
+          v-model="ruleForm.beginTime"
+          type="daterange"
+          unlink-panels
+          :picker-options="pickerOptions"
+        />
+
+        import { pickerOptions } from '@/utils/index.js'
+        
+        data() {
+          return {
+            // 日期控件的配置
+            pickerOptions
+          }
+        },
+
+
     
 
     
