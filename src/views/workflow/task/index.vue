@@ -7,80 +7,75 @@
       <el-form
         ref="ruleForm"
         :model="ruleForm"
-        status-icon
         class="login-info"
         size="mini"
       >
         <el-row>
           <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="被代办人:" label-width="150px" prop="beAgentPersonId">
-              <el-input 
-                v-model="ruleForm.beAgentPersonId"
-                placeholder="请输入被代办人" 
+            <el-form-item label="业务主键:" label-width="150px" prop="businessKey">
+              <el-input
+                v-model="ruleForm.businessKey"
+                placeholder="请输入业务主键"
               />
             </el-form-item>
           </el-col>
           <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="代办人:" label-width="150px" prop="agentPersonId">
-              <el-input 
-                v-model="ruleForm.agentPersonId"
+            <el-form-item label="流程定义Id:" label-width="150px" prop="procDefId">
+              <el-input
+                v-model="ruleForm.procDefId"
                 placeholder="请输入代办人"
               />
             </el-form-item>
           </el-col>
           <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="状态:" label-width="150px" prop="status">
-              <el-select
-                v-model="ruleForm.status"
-                clearable
-                placeholder="请选择"
-              >
-              <el-option
-                label="张三"
-                value="001"
-              />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="所属系统:" label-width="150px" prop="systemNo">
-              <el-select
-                v-model="ruleForm.systemNo"
-                clearable
-                placeholder="请选择"
-              >
-                <el-option
-                  label="张三"
-                  value="001"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="开始时间:" label-width="150px" prop="beginTime">
+            <el-form-item label="流程定义key:" label-width="150px" prop="procDefKey">
               <el-input
-                v-model="ruleForm.beginTime"
-                placeholder="请输入开始时间"
+                v-model="ruleForm.procDefId"
+                placeholder="请输入流程定义key"
               />
             </el-form-item>
           </el-col>
           <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="结束时间:" label-width="150px" prop="endTime">
+            <el-form-item label="流程标题:" label-width="150px" prop="procDefName">
               <el-input
-                v-model="ruleForm.endTime"
-                placeholder="请输入结束时间"
+                v-model="ruleForm.procDefId"
+                placeholder="请输入流程标题"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" :xs="24" :sm="24">
+            <el-form-item label="流程实例Id:" label-width="150px" prop="procInstId">
+              <el-input
+                v-model="ruleForm.procInstId"
+                placeholder="请输入流程实例Id"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" :xs="24" :sm="24">
+            <el-form-item label="处理人:" label-width="150px" prop="assignee">
+              <el-input
+                v-model="ruleForm.assignee"
+                placeholder="请输入处理人"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" :xs="24" :sm="24">
+            <el-form-item label="流程定义节点Id:" label-width="150px" prop="taskDefKey">
+              <el-input
+                v-model="ruleForm.taskDefKey"
+                placeholder="请输入流程定义节点Id"
               />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item class="rightItem">
-          <el-button type="primary" @click="searchForm('ruleForm')">查询</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <el-button type="primary" @click.native.prevent="searchForm('ruleForm')">查询</el-button>
+          <el-button @click.native.prevent="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
       <el-table
         ref="singleTable"
-        :data="agentconfig.list.RetList"
+        :data="approving.list.RetList"
         highlight-current-row
         style="width: 100%"
         border
@@ -88,46 +83,57 @@
         @current-change="getRowData"
       >
         <el-table-column
-          property="systemNm"
-          label="所属系统"
+          property="businessKey"
+          label="业务主键"
         />
         <el-table-column
-          property="beAgentPersonId"
-          label="被代办人"
+          property="procDefKey"
+          label="流程定义Key"
         />
         <el-table-column
-          property="agentPersonId"
-          label="代办人"
+          property="procDefName"
+          label="流程标题"
         />
         <el-table-column
-          property="beginTime"
-          label="开始时间"
-          :formatter="formatterDate"
+          property="version"
+          label="流程定义版本号"
         />
         <el-table-column
-          property="endTime"
-          label="结束时间"
-          :formatter="formatterDate2"
+          property="procInstId"
+          label="流程实例Id"
         />
         <el-table-column
-          property="statusName"
-          label="状态"
+          property="name"
+          label="节点名称"
+        />
+        <el-table-column
+          property="startTimeStr"
+          label="任务创建时间"
+        />
+        <el-table-column
+          property="claimTimeStr"
+          label="任务获取时间"
+        />
+        <el-table-column
+          property="assignee"
+          label="处理人"
         />
         <el-table-column
           label="操作"
         >
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="delete(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click.native.prevent="showTask(scope.row)">审批表单</el-button>
+            <el-button type="text" size="small" @click.native.prevent="showTransferPersonForm(scope.row)">任务转办</el-button>
+            <el-button type="text" size="small" @click.native.prevent="showRowBack(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
-        :total="agentconfig.list.total"
+        :total="approving.list.total"
         layout="total, sizes, prev, pager, next, jumper"
-        :current-page="agentconfig.list.current"
+        :current-page="approving.list.current"
         :page-sizes="[10, 20, 50]"
-        :page-size="agentconfig.list.pageSize"
+        :page-size="approving.list.pageSize"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -138,19 +144,19 @@
 <script>
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
-import moment from 'moment'
 export default {
   name: 'Tasking',
   data() {
     return {
       // 表单数据
       ruleForm: {
-        beAgentPersonId: '',
-        agentPersonId: '',
-        status: '',
-        systemNo: '',
-        beginTime: '',
-        endTime: ''
+        businessKey: '',
+        procDefId: '',
+        procDefKey: '',
+        procDefName: '',
+        procInstId: '',
+        assignee: '',
+        taskDefKey: ''
       },
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
@@ -158,87 +164,80 @@ export default {
     }
   },
   computed: {
-    ...mapState(['agentconfig'])
+    ...mapState(['approving'])
   },
   created() {
     const params = {
       maxResults: '10',
-      pageNo: '1',
-      queryCanditions: []
+      pageNo: '1'
     }
     this.initData(params)
   },
   methods: {
     // 初始化
     initData(payload) {
-      this.ruleForm = payload.queryCanditions.length > 0 ? payload.queryCanditions[0] : this.ruleForm
+      this.ruleForm = payload
       this.maxResults = payload.maxResults
       this.pageNo = payload.pageNo
-      this.$store.dispatch('agentconfig/getList', payload)
+      this.$store.dispatch('approving/getList', payload)
     },
     // 查询
     searchForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          Message.success('查询成功')
-          const arr = []
-          arr.push(this.ruleForm)
           const params = {
             maxResults: '10',
             pageNo: '1',
-            queryCanditions: arr
+            ...this.ruleForm
           }
           this.initData(params)
-        } else {
-          Message.error('查询失败')
         }
       })
     },
     // 重置
     resetForm(formName) {
       // this.$refs[formName].resetFields()
-      this.$set(this.ruleForm, 'beAgentPersonId', '')
+      this.$set(this.ruleForm, 'businessKey', '')
+      this.$set(this.ruleForm, 'procDefId', '')
+      this.$set(this.ruleForm, 'procDefKey', '')
+      this.$set(this.ruleForm, 'procDefName', '')
+      this.$set(this.ruleForm, 'procInstId', '')
+      this.$set(this.ruleForm, 'assignee', '')
+      this.$set(this.ruleForm, 'taskDefKey', '')
     },
     // 点击当前行
     getRowData(val) {
       this.rowData = val
     },
-    // 编辑
-    edit(row) {
+    // 审批表单
+    showTask(row) {
       console.log(row)
     },
-    // 删除
-    delete(row) {
+    // 任务转办
+    showTransferPersonForm(row) {
       console.log(row)
     },
-    // 格式转换
-    formatterDate(row, column) {
-      return moment(row.beginTime).format('YYYY-MM-DD')
-    },
-    formatterDate2(row, column) {
-      return moment(row.endTime).format('YYYY-MM-DD')
+    // 退回
+    showRowBack(row) {
+      console.log(row)
     },
     // pageSize 改变
     handleSizeChange(val) {
       const _this = this
-      const arr = []
-      arr.push(this.ruleForm)
       const params = {
         maxResults: val,
         pageNo: _this.pageNo,
-        queryCanditions: arr
+        ...this.ruleForm
       }
       this.initData(params)
     },
     // currentPage 改变
     handleCurrentChange(val) {
       const _this = this
-      const arr = []
-      arr.push(this.ruleForm)
       const params = {
         maxResults: _this.maxResults,
         pageNo: val,
-        queryCanditions: arr
+        ...this.ruleForm
       }
       this.initData(params)
     }

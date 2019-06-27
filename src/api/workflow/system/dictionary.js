@@ -1,15 +1,16 @@
 import request from '@/utils/request'
 
-export function getList(data) {
+// 查询列表
+export function dictionaryList(data) {
   return request({
-    url: '/agentconfig/list',
-    method: 'post',
+    url: '/dictionary/list',
+    method: 'POST',
     data
   })
 }
 
-// 查询数据字典
-export function agentconfigSystem(data) {
+// 查询字典
+export function dicTypeList(data) {
   return request({
     url: '/sys-dic/dic',
     method: 'POST',
@@ -20,16 +21,7 @@ export function agentconfigSystem(data) {
 // 新增
 export function addList(data) {
   return request({
-    url: '/agentconfig/add',
-    method: 'POST',
-    data
-  })
-}
-
-// 编辑
-export function editList(data) {
-  return request({
-    url: '/agentconfig/edit',
+    url: '/dictionary/add',
     method: 'POST',
     data
   })
@@ -38,7 +30,7 @@ export function editList(data) {
 // 删除
 export function deleteList(data) {
   return request({
-    url: '/agentconfig/delete',
+    url: '/dictionary/delete',
     method: 'POST',
     data
   })

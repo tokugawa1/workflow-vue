@@ -5,12 +5,12 @@
         <span>请选择接入系统</span>
       </div>
       <el-row>
-        <el-col :span='6' v-for="item in chooseSys.list" :key="item.SystemNo" class="box">
-          <el-card class="box_list" @click.native.prevent="turnHome">
-            <img :src="imgUrl1" v-if="item.Icon === '12'" />
-			      <img :src="imgUrl2" v-else />
-            <h2>{{item.SystemNm}}</h2>
-            <h5>{{item.SysUsNm}}</h5>
+        <el-col v-for="item in chooseSys.list" :key="item.SystemNo" :span="6" class="box">
+          <el-card class="box_list" @click.native.prevent="turnHome(item)">
+            <img v-if="item.Icon === '12'" :src="imgUrl1">
+            <img v-else :src="imgUrl2">
+            <h2>{{ item.SystemNm }}</h2>
+            <h5>{{ item.SysUsNm }}</h5>
           </el-card>
         </el-col>
       </el-row>
@@ -19,24 +19,25 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import img1 from '@/assets/workflow.svg';
+import { mapState } from 'vuex'
+import img1 from '@/assets/workflow.svg'
 import img2 from '@/assets/alphabet-logo-Y.svg'
 export default {
   data() {
     return {
       imgUrl1: img1,
-	    imgUrl2: img2,
+      imgUrl2: img2
     }
   },
   computed: {
     ...mapState(['chooseSys'])
   },
   created() {
-	  this.$store.dispatch('chooseSys/getList')
+    this.$store.dispatch('chooseSys/getList')
   },
   methods: {
-    turnHome(){
+    turnHome(item) {
+      localStorage.setItem('sysInfo', JSON.stringify(item))
       this.$router.push({
         path: '/'
       })
@@ -59,7 +60,6 @@ export default {
       @extend h2;
     }
   }
-  
 }
 
 </style>

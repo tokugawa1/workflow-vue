@@ -14,15 +14,15 @@
         <el-row>
           <el-col :md="12" :xs="24" :sm="24">
             <el-form-item label="被代办人:" label-width="150px" prop="beAgentPersonId">
-              <el-input 
+              <el-input
                 v-model="ruleForm.beAgentPersonId"
-                placeholder="请输入被代办人" 
+                placeholder="请输入被代办人"
               />
             </el-form-item>
           </el-col>
           <el-col :md="12" :xs="24" :sm="24">
             <el-form-item label="代办人:" label-width="150px" prop="agentPersonId">
-              <el-input 
+              <el-input
                 v-model="ruleForm.agentPersonId"
                 placeholder="请输入代办人"
               />
@@ -35,10 +35,12 @@
                 clearable
                 placeholder="请选择"
               >
-              <el-option
-                label="张三"
-                value="001"
-              />
+                <el-option
+                  v-for="item in statusDicList"
+                  :key="item.key"
+                  :label="item.name"
+                  :value="item.key"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -50,8 +52,10 @@
                 placeholder="请选择"
               >
                 <el-option
-                  label="张三"
-                  value="001"
+                  v-for="item in statusDicList"
+                  :key="item.key"
+                  :label="item.name"
+                  :value="item.key"
                 />
               </el-select>
             </el-form-item>
@@ -78,10 +82,13 @@
           </el-col>
         </el-row>
         <el-form-item class="rightItem">
-          <el-button type="primary" @click="searchForm('ruleForm')">查询</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <el-button type="primary" @click.native.prevent="searchForm('ruleForm')">查询</el-button>
+          <el-button @click.native.prevent="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
+      <div class="addBtn">
+        <el-button size="small" type="primary" @click.native.prevent="add()">新增</el-button>
+      </div>
       <el-table
         ref="singleTable"
         :data="agentconfig.list.RetList"
@@ -121,8 +128,8 @@
           label="操作"
         >
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="delete(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click.native.prevent="edit(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click.native.prevent="delete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -165,7 +172,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['agentconfig'])
+    ...mapState(['agentconfig']),
+    // 状态的数组
+    statusDicList: function(){
+      return this.findList("YES_OR_NO")
+    }
   },
   created() {
     const params = {
@@ -174,6 +185,7 @@ export default {
       queryCanditions: []
     }
     this.initData(params)
+    this.initDic()
   },
   methods: {
     // 初始化
@@ -183,11 +195,28 @@ export default {
       this.pageNo = payload.pageNo
       this.$store.dispatch('agentconfig/getList', payload)
     },
+    // 查询状态和所属系统
+    initDic() {
+      const params = [
+        { "type": "YES_OR_NO" },
+        { "type": "SUB_SYSTEM" }
+      ]
+      this.$store.dispatch('agentconfig/getSys', params)
+    },
+    findList(option) {
+      console.log('222', this.agentconfig)
+      let arr = []
+      this.agentconfig.sysList.forEach(item => {
+        if(item.dictionaryNo === option) {
+          arr = item.dictionaryList
+        }
+      })
+      return arr
+    },
     // 查询
     searchForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          Message.success('查询成功')
           const arr = []
           arr.push(this.ruleForm)
           const params = {
@@ -196,8 +225,6 @@ export default {
             queryCanditions: arr
           }
           this.initData(params)
-        } else {
-          Message.error('查询失败')
         }
       })
     },
@@ -213,6 +240,7 @@ export default {
     },
     // 点击当前行
     getRowData(val) {
+      console.log(this.agentconfig)
       this.rowData = val
     },
     // 编辑
@@ -269,6 +297,10 @@ export default {
   @extend .el-select
 }
 .rightItem{
+  text-align: right;
+}
+.addBtn{
+  margin: 10px 0;
   text-align: right;
 }
 </style>

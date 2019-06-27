@@ -115,7 +115,7 @@ export const asyncRoutes = [
         path: 'agentconfig',
         name: 'AgentConfig',
         component: () => import('@/views/workflow/system/agentconfig/index'),
-        meta: { 
+        meta: {
           title: '代办配置',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
@@ -125,7 +125,7 @@ export const asyncRoutes = [
         path: 'systemdata',
         name: 'SystemData',
         component: () => import('@/views/workflow/system/systemdata/index'),
-        meta: { 
+        meta: {
           title: '系统参数',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
@@ -135,7 +135,7 @@ export const asyncRoutes = [
         path: 'dictionary',
         name: 'Dictionary',
         component: () => import('@/views/workflow/system/dictionary/index'),
-        meta: { 
+        meta: {
           title: '数据字典',
           icon: 'table',
           roles: ['ROL4350701']
@@ -145,12 +145,12 @@ export const asyncRoutes = [
         path: 'log',
         name: 'Log',
         component: () => import('@/views/workflow/system/log/index'),
-        meta: { 
+        meta: {
           title: '日志监控',
           icon: 'table',
           roles: ['ROL4350701']
         }
-      },
+      }
     ]
   },
   {
@@ -164,7 +164,7 @@ export const asyncRoutes = [
         path: 'defining',
         name: 'Defining',
         component: () => import('@/views/workflow/define/defining/index'),
-        meta: { 
+        meta: {
           title: '运行中流程定义列表',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
@@ -174,7 +174,7 @@ export const asyncRoutes = [
         path: 'finishdefine',
         name: 'FinishDefine',
         component: () => import('@/views/workflow/define/finishDefine/index'),
-        meta: { 
+        meta: {
           title: '已结束流程定义列表',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
@@ -193,17 +193,17 @@ export const asyncRoutes = [
         path: 'instancing',
         name: 'Instancing',
         component: () => import('@/views/workflow/instance/instancing/index'),
-        meta: { 
+        meta: {
           title: '运行中流程实例列表',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
         }
       },
       {
-        path: 'finishdefine',
-        name: 'FinishDefine',
-        component: () => import('@/views/workflow/define/finishDefine/index'),
-        meta: { 
+        path: 'finishinstance',
+        name: 'FinishInstance',
+        component: () => import('@/views/workflow/instance/finishInstance/index'),
+        meta: {
           title: '已结束流程实例列表',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
@@ -222,7 +222,7 @@ export const asyncRoutes = [
         path: 'tasking',
         name: 'Tasking',
         component: () => import('@/views/workflow/task/index'),
-        meta: { 
+        meta: {
           title: '任务实例列表',
           icon: 'table',
           roles: ['ROL4350701', 'ROL1020398']
@@ -237,7 +237,7 @@ export const asyncRoutes = [
     name: 'Nested',
     meta: {
       title: 'Nested',
-      icon: 'nested',
+      icon: 'nested'
     },
     children: [
       {

@@ -361,6 +361,54 @@ npm run lint -- --fix
           }
         },
 
+## 10.封装element-ui的loading组件
+  <1>.在src/utils下新建loading.js，并写入:     
+      import { Loading } from 'element-ui';
+
+      let loadingCount = 0;
+      let loading;
+
+      const startLoading = () => {
+        loading = Loading.service({
+          lock: true,
+          text: '加载中……',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+      };
+
+      const endLoading = () => {
+        loading.close();
+      };
+
+      // 开始加载
+      export const showLoading = () => {
+        if (loadingCount === 0) {
+          startLoading();
+        }
+        loadingCount += 1;
+      };
+
+      // 加载完成
+      export const hideLoading = () => {
+        if (loadingCount <= 0) {
+          return;
+        }
+        loadingCount -= 1;
+        if (loadingCount === 0) {
+          endLoading();
+        }
+      };
+
+  <2>.在src/utils/request.js里引入，在请求拦截写入:showLoading()  和相应拦截写入: hideLoading()
+
+## 11.在methods或者computed中取mapState里的值
+    举例: 
+        ...mapState(['agentconfig']),
+    computed: {
+      statusDicList: function(){
+        return this.findList("YES_OR_NO")
+      }
+    },
 
     
 
