@@ -16,6 +16,18 @@ body {
   padding: 20px;
 }
 
+.el-dialog__header {
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+.el-dialog__body{
+  padding: 30px 20px 20px 20px;
+}
+.el-dialog__footer{
+  padding: 10px 20px;
+  border-top: 1px solid #ccc;
+}
+
 label {
   font-weight: 700;
 }

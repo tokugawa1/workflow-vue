@@ -410,6 +410,21 @@ npm run lint -- --fix
       }
     },
 
+## 12.注意： 父组件传值时，如果是驼峰命名的，要转成小写并用连字符连起来
+    举例:
+      父组件：
+        <add-item v-if="isAdd" :visible.sync="isAdd" :system-dic-list="systemDicList" />
+
+      子组件:
+        props: {
+          systemDicList: {
+            type: Array,
+            default: function() {
+              return []
+            }
+          }
+        },
+
     
 
     

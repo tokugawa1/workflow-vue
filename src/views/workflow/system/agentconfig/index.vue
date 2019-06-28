@@ -52,7 +52,7 @@
                 placeholder="请选择"
               >
                 <el-option
-                  v-for="item in statusDicList"
+                  v-for="item in systemDicList"
                   :key="item.key"
                   :label="item.name"
                   :value="item.key"
@@ -143,16 +143,20 @@
         @size-change="handleSizeChange"
       />
     </el-card>
+    <add-item v-if="isAdd" :visible.sync="isAdd" :system-dic-list="systemDicList" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { Message } from 'element-ui'
 import moment from 'moment'
 import { pickerOptions } from '@/utils/index.js'
+import addItem from '@/views/workflow/system/agentconfig/addItem'
 export default {
   name: 'AgentConfig',
+  components: {
+    'add-item': addItem
+  },
   data() {
     return {
       // 表单数据
@@ -164,6 +168,7 @@ export default {
         beginTime: '',
         endTime: ''
       },
+      isAdd: false, // 新增弹出
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
       rowData: {}, // 当前行选中的数据
@@ -174,8 +179,11 @@ export default {
   computed: {
     ...mapState(['agentconfig']),
     // 状态的数组
-    statusDicList: function(){
-      return this.findList("YES_OR_NO")
+    statusDicList: function() {
+      return this.findList('YES_OR_NO')
+    },
+    systemDicList: function() {
+      return this.findList('SUB_SYSTEM')
     }
   },
   created() {
@@ -204,7 +212,6 @@ export default {
       this.$store.dispatch('agentconfig/getSys', params)
     },
     findList(option) {
-      console.log('222', this.agentconfig)
       let arr = []
       this.agentconfig.sysList.forEach(item => {
         if(item.dictionaryNo === option) {
@@ -240,8 +247,11 @@ export default {
     },
     // 点击当前行
     getRowData(val) {
-      console.log(this.agentconfig)
       this.rowData = val
+    },
+    // 添加
+    add() {
+      this.isAdd = true
     },
     // 编辑
     edit(row) {
@@ -281,6 +291,10 @@ export default {
         queryCanditions: arr
       }
       this.initData(params)
+    },
+    // 子组件回调函数
+    closeDialog(code) {
+      this.visible = code
     }
   }
 }
