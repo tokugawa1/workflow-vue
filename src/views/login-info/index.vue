@@ -111,8 +111,8 @@ export default {
       const jwt = require('jwt-decode')
       const { state } = this.$store
       const user = jwt(state.user.token)
-	  // 赋初始值
-      if(user){
+      // 赋初始值
+      if (user) {
         this.data = user
         this.ruleForm.org = user.orgs[0].ORG_NM
         this.ruleForm.rule = user.roles[0].ROLE_NM

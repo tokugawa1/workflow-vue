@@ -37,7 +37,7 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -100,17 +100,17 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}'
   )
 }
 
 // 封装日期控件里的时间选择项
-export const pickerOptions = {
+export const ragerOptions = {
   disabledDate(time) {
     return time.getTime() > Date.now();
   },
@@ -133,7 +133,7 @@ export const pickerOptions = {
       }
     },
     {
-    text: '一周前',
+      text: '一周前',
       onClick(picker) {
         const end = new Date();
         const start = new Date();
@@ -157,6 +157,53 @@ export const pickerOptions = {
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
         picker.$emit('pick', [start, end]);
+      }
+    }
+  ]
+}
+
+// 封装日期控件里的时间选择项
+export const pickerOptions = {
+  disabledDate(time) {
+    return time.getTime() > Date.now();
+  },
+  shortcuts: [
+    {
+      text: '今天',
+      onClick(picker) {
+        picker.$emit('pick', new Date());
+      }
+    },
+    {
+      text: '昨天',
+      onClick(picker) {
+        const date = new Date();
+        date.setTime(date.getTime() - 3600 * 1000 * 24);
+        picker.$emit('pick', date);
+      }
+    },
+    {
+      text: '一周前',
+      onClick(picker) {
+        const date = new Date();
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+        picker.$emit('pick', date);
+      }
+    },
+    {
+      text: '最近一个月',
+      onClick(picker) {
+        const date = new Date();
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+        picker.$emit('pick', date);
+      }
+    },
+    {
+      text: '最近三个月',
+      onClick(picker) {
+        const date = new Date();
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 90);
+        picker.$emit('pick', date);
       }
     }
   ]

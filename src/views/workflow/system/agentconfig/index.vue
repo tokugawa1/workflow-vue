@@ -66,7 +66,7 @@
                 v-model="ruleForm.beginTime"
                 type="daterange"
                 unlink-panels
-                :picker-options="pickerOptions"
+                :picker-options="ragerOptions"
               />
             </el-form-item>
           </el-col>
@@ -76,7 +76,7 @@
                 v-model="ruleForm.endTime"
                 type="daterange"
                 unlink-panels
-                :picker-options="pickerOptions"
+                :picker-options="ragerOptions"
               />
             </el-form-item>
           </el-col>
@@ -129,7 +129,7 @@
         >
           <template slot-scope="scope">
             <el-button type="text" size="small" @click.native.prevent="edit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click.native.prevent="delete(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click.native.prevent="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -143,14 +143,21 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <add-item v-if="isAdd" :visible.sync="isAdd" :system-dic-list="systemDicList" />
+    <add-item
+      v-if="visible"
+      :visible.sync="visible"
+      :system-dic-list="systemDicList"
+      @changeVisible="updateVisible"
+      :isAdd="isAdd"
+      :row-data="rowData"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import moment from 'moment'
-import { pickerOptions } from '@/utils/index.js'
+import { ragerOptions } from '@/utils/index.js'
 import addItem from '@/views/workflow/system/agentconfig/addItem'
 export default {
   name: 'AgentConfig',
@@ -168,12 +175,13 @@ export default {
         beginTime: '',
         endTime: ''
       },
-      isAdd: false, // 新增弹出
+      visible: false, // 新增弹出
+      isAdd: true, // 是否新增
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
       rowData: {}, // 当前行选中的数据
       // 日期控件的配置
-      pickerOptions
+      ragerOptions
     }
   },
   computed: {
@@ -206,15 +214,15 @@ export default {
     // 查询状态和所属系统
     initDic() {
       const params = [
-        { "type": "YES_OR_NO" },
-        { "type": "SUB_SYSTEM" }
+        { type: 'YES_OR_NO' },
+        { type: 'SUB_SYSTEM' }
       ]
       this.$store.dispatch('agentconfig/getSys', params)
     },
     findList(option) {
       let arr = []
       this.agentconfig.sysList.forEach(item => {
-        if(item.dictionaryNo === option) {
+        if (item.dictionaryNo === option) {
           arr = item.dictionaryList
         }
       })
@@ -251,15 +259,49 @@ export default {
     },
     // 添加
     add() {
+      this.visible = true
       this.isAdd = true
     },
     // 编辑
     edit(row) {
       console.log(row)
+      if (JSON.stringify(row) === '{}') {
+        this.$message.error('请选择一条数据')
+        return
+      }
+      this.visible = true
+      this.isAdd = false
+      this.rowData = row
     },
     // 删除
-    delete(row) {
-      console.log(row)
+    deleteItem(row) {
+      if (JSON.stringify(row) === '{}') {
+        this.$message.error('请选择一条数据')
+        return
+      }
+      this.$confirm('此操作将删除该条数据，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+          const params = {
+          id: row._id
+        }
+        this.$store.dispatch('agentconfig/deleteList', params).then(res => {
+          if (res) {
+            this.$message.success('删除成功')
+            const params = {
+              maxResults: '10',
+              pageNo: '1',
+              queryCanditions: []
+            }
+            this.initData(params)
+          } else {
+            this.$message.error('删除失败')
+          }
+        })
+      }).catch(action => {
+        return
+      })
     },
     // 格式转换
     formatterDate(row, column) {
@@ -293,8 +335,14 @@ export default {
       this.initData(params)
     },
     // 子组件回调函数
-    closeDialog(code) {
+    updateVisible(code) {
       this.visible = code
+      const params = {
+        maxResults: '10',
+        pageNo: '1',
+        queryCanditions: []
+      }
+      this.initData(params) 
     }
   }
 }
