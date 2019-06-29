@@ -54,6 +54,16 @@ const actions = {
       })
     })
   },
+  // 修改
+  editList({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      editList(payload).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // 删除
   deleteList({ commit }, payload) {
     return new Promise((resolve, reject) => {

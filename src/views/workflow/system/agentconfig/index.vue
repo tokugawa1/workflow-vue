@@ -50,6 +50,7 @@
                 v-model="ruleForm.systemNo"
                 clearable
                 placeholder="请选择"
+                @change="getSystem"
               >
                 <el-option
                   v-for="item in systemDicList"
@@ -149,7 +150,7 @@
       :system-dic-list="systemDicList"
       @changeVisible="updateVisible"
       :isAdd="isAdd"
-      :row-data="rowData"
+      :row-data="detailForm"
     />
   </div>
 </template>
@@ -173,13 +174,14 @@ export default {
         status: '',
         systemNo: '',
         beginTime: '',
-        endTime: ''
+        endTime: '',
+        systemNm: ''
       },
+      detailForm: {},
       visible: false, // 新增弹出
       isAdd: true, // 是否新增
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
-      rowData: {}, // 当前行选中的数据
       // 日期控件的配置
       ragerOptions
     }
@@ -219,6 +221,7 @@ export default {
       ]
       this.$store.dispatch('agentconfig/getSys', params)
     },
+    // 获取筛选的数据字典
     findList(option) {
       let arr = []
       this.agentconfig.sysList.forEach(item => {
@@ -257,21 +260,48 @@ export default {
     getRowData(val) {
       this.rowData = val
     },
+    // 获取systemNm
+    getSystem(value) {
+      this.systemDicList.forEach(item => {
+        if (item.key === value) {
+          this.ruleForm.systemNm = item.name
+        }
+      })
+    },
     // 添加
     add() {
       this.visible = true
       this.isAdd = true
+      const params = {
+        beAgentPersonId: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).userNo : '',
+        agentPersonId: '',
+        status: '',
+        systemNo: '',
+        beginTime: '',
+        endTime: '',
+        systemNm: ''
+      }
+      this.detailForm = params
     },
     // 编辑
     edit(row) {
-      console.log(row)
       if (JSON.stringify(row) === '{}') {
         this.$message.error('请选择一条数据')
         return
       }
       this.visible = true
       this.isAdd = false
-      this.rowData = row
+      const params = {
+        beAgentPersonId: row.beAgentPersonId,
+        agentPersonId: row.agentPersonId,
+        status: row.status,
+        systemNo: row.systemNo,
+        beginTime: row.beginTime,
+        endTime: row.endTime,
+        systemNm: row.systemNm,
+        id: row._id
+      }
+      this.detailForm = params
     },
     // 删除
     deleteItem(row) {

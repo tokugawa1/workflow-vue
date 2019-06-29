@@ -76,14 +76,25 @@
         @size-change="handleSizeChange"
       />
     </el-card>
+    <detail
+      v-if="visible"
+      :visible.sync="visible"
+      @changeVisible="updateVisible"
+      :isAdd="isAdd"
+      :row-data="detailForm"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
+import detail from '@/views/workflow/system/systemdata/detail'
 export default {
   name: 'SystemData',
+  components: {
+    detail
+  },
   data() {
     return {
       // 表单数据
@@ -91,6 +102,13 @@ export default {
         paraKey: '',
         paraName: ''
       },
+      detailForm: {
+        paraKey: '',
+        paraName: '',
+        paraValue: ''
+      },
+      visible: false, // 弹窗状态
+      isAdd: true, // 是否新增
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
       rowData: {} // 当前行选中的数据
@@ -109,7 +127,8 @@ export default {
   methods: {
     // 初始化
     initData(payload) {
-      this.ruleForm = payload
+      this.ruleForm.paraKey = payload.paraKey
+      this.ruleForm.paraName = payload.paraName
       this.maxResults = payload.maxResults
       this.pageNo = payload.pageNo
       this.$store.dispatch('systemdata/getList', payload)
@@ -123,15 +142,26 @@ export default {
             pageNo: '1',
             ...this.ruleForm
           }
+          console.log('222', params)
           this.initData(params)
         }
       })
     },
     // 重置
     resetForm(formName) {
-      // this.$refs[formName].resetFields()
       this.$set(this.ruleForm, 'paraKey', '')
       this.$set(this.ruleForm, 'paraName', '')
+    },
+    // 新增
+    add() {
+      const params = {
+        paraKey: '',
+        paraName: '',
+        paraValue: ''
+      }
+      this.detailForm = params
+      this.visible = true // 弹窗打开
+      this.isAdd = true
     },
     // 点击当前行
     getRowData(val) {
@@ -139,7 +169,19 @@ export default {
     },
     // 编辑
     edit(row) {
-      console.log(row)
+      if (JSON.stringify(row) === '{}') {
+        this.$message.error('请选择一条数据')
+        return
+      }
+      const params = {
+        paraKey: row.paraKey,
+        paraName: row.paraName,
+        paraValue: row.paraValue,
+        id: row._id
+      }
+      this.detailForm = params
+      this.visible = true
+      this.isAdd = false
     },
     // pageSize 改变
     handleSizeChange(val) {
@@ -160,6 +202,15 @@ export default {
         ...this.ruleForm
       }
       this.initData(params)
+    },
+    // 子组件回调函数
+    updateVisible(code) {
+      this.visible = code
+      const params = {
+        maxResults: '10',
+        pageNo: '1',
+      }
+      this.initData(params) 
     }
   }
 }

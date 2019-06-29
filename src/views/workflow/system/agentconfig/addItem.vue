@@ -1,13 +1,13 @@
 <template>
   <el-dialog
-    title="添加"
+    :title="isAdd ? '添加' : '编辑'"
     :visible="visible"
     width="40%"
     :before-close="modalClose"
   >
     <el-form
       ref="addForm"
-      :model="addForm"
+      :model="rowData"
       status-icon
       size="mini"
       :rules="rules"
@@ -16,7 +16,7 @@
         <el-col :md="20" :xs="20" :sm="20">
           <el-form-item label="所属系统:" label-width="150px" prop="systemNo">
             <el-select
-              v-model="addForm.systemNo"
+              v-model="rowData.systemNo"
               placeholder="请选择"
               @change="getSystem"
             >
@@ -32,15 +32,16 @@
         <el-col :md="20" :xs="20" :sm="20">
           <el-form-item label="被代办人:" label-width="150px" prop="beAgentPersonId">
             <el-input
-              v-model="addForm.beAgentPersonId"
+              v-model="rowData.beAgentPersonId"
               placeholder="请输入被代办人"
+              :disabled="!isAdd"
             />
           </el-form-item>
         </el-col>
         <el-col :md="20" :xs="20" :sm="20">
           <el-form-item label="代办人:" label-width="150px" prop="agentPersonId">
             <el-input
-              v-model="addForm.agentPersonId"
+              v-model="rowData.agentPersonId"
               placeholder="请输入代办人"
             />
           </el-form-item>
@@ -48,7 +49,7 @@
         <el-col :md="20" :xs="20" :sm="20">
           <el-form-item label="开始时间:" label-width="150px" prop="beginTime">
             <el-date-picker
-              v-model="addForm.beginTime"
+              v-model="rowData.beginTime"
               type="date"
               align="right"
               placeholder="请选择开始时间"
@@ -59,7 +60,7 @@
         <el-col :md="20" :xs="20" :sm="20" class="end">
           <el-form-item label="结束时间:" label-width="150px" prop="endTime">
             <el-date-picker
-              v-model="addForm.endTime"
+              v-model="rowData.endTime"
               type="date"
               align="right"
               placeholder="请选择结束时间"
@@ -79,6 +80,7 @@
 import { pickerOptions } from '@/utils/index.js'
 import moment from 'moment'
 export default {
+  name: 'AddItem',
   props: {
     visible: { type: Boolean },
     systemDicList: { type: Array },
@@ -90,7 +92,7 @@ export default {
       if (value === '') {
         callback(new Error('结束时间不能为空'));
       } else {
-        const startTime = Number(moment(this.addForm.beginTime).format('YYYYMMDD'))
+        const startTime = Number(moment(this.rowData.beginTime).format('YYYYMMDD'))
         const endTime = Number(moment(value).format('YYYYMMDD'))
         if (startTime > endTime) {
           callback(new Error('开始时间不能大于结束时间'));
@@ -99,14 +101,6 @@ export default {
       }
     };
     return {
-      addForm: {
-        systemNo: '',
-        systemNm: '',
-        beAgentPersonId: '',
-        agentPersonId: '',
-        beginTime: '',
-        endTime: ''
-      },
       rules: {
         systemNo: [{ required: true, trigger: 'change', message: '所属系统不能为空' }],
         beAgentPersonId: [{ required: true, trigger: 'blur', message: '被代办人不能为空' }],
@@ -134,7 +128,7 @@ export default {
     getSystem(value) {
       this.systemDicList.forEach(item => {
         if (item.key === value) {
-          this.addForm.systemNm = item.name
+          this.rowData.systemNm = item.name
         }
       })
     },
@@ -143,14 +137,23 @@ export default {
       this.$refs['addForm'].validate(valid => {
         if (valid) {
           const params = {
-            ...this.addForm
+            ...this.rowData
           }
-          this.$store.dispatch('agentconfig/addList', params).then(res => {
+          let action = ''
+          let title = ''
+          if (this.isAdd) {
+            action = 'agentconfig/addList'
+            title = '新增'
+          } else {
+            action = 'agentconfig/editList'
+            title = '编辑'
+          }
+          this.$store.dispatch(action, params).then(res => {
             if (res) {
-              this.$message.success('新增成功')
+              this.$message.success(`${title}成功`)
               this.$emit('changeVisible', false)
             } else {
-              this.$message.success('新增失败')
+              this.$message.success(`${title}失败`)
             }
           })
         }

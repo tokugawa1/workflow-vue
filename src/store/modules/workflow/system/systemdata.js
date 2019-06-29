@@ -26,7 +26,27 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
+  // 新增
+  addList({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      addList(payload).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 修改
+  editList({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      editList(payload).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 }
 
 export default {
