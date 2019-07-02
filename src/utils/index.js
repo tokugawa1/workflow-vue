@@ -112,51 +112,51 @@ export function param2Obj(url) {
 // 封装日期控件里的时间选择项
 export const ragerOptions = {
   disabledDate(time) {
-    return time.getTime() > Date.now();
+    return time.getTime() > Date.now()
   },
   shortcuts: [
     {
       text: '今天',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        picker.$emit('pick', [start, end]);
+        const end = new Date()
+        const start = new Date()
+        picker.$emit('pick', [start, end])
       }
     },
     {
       text: '昨天',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24);
-        picker.$emit('pick', [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24)
+        picker.$emit('pick', [start, end])
       }
     },
     {
       text: '一周前',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-        picker.$emit('pick', [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+        picker.$emit('pick', [start, end])
       }
     },
     {
       text: '最近一个月',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        picker.$emit('pick', [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+        picker.$emit('pick', [start, end])
       }
     },
     {
       text: '最近三个月',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-        picker.$emit('pick', [start, end]);
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+        picker.$emit('pick', [start, end])
       }
     }
   ]
@@ -165,46 +165,59 @@ export const ragerOptions = {
 // 封装日期控件里的时间选择项
 export const pickerOptions = {
   disabledDate(time) {
-    return time.getTime() > Date.now();
+    return time.getTime() > Date.now()
   },
   shortcuts: [
     {
       text: '今天',
       onClick(picker) {
-        picker.$emit('pick', new Date());
+        picker.$emit('pick', new Date())
       }
     },
     {
       text: '昨天',
       onClick(picker) {
-        const date = new Date();
-        date.setTime(date.getTime() - 3600 * 1000 * 24);
-        picker.$emit('pick', date);
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24)
+        picker.$emit('pick', date)
       }
     },
     {
       text: '一周前',
       onClick(picker) {
-        const date = new Date();
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-        picker.$emit('pick', date);
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+        picker.$emit('pick', date)
       }
     },
     {
       text: '最近一个月',
       onClick(picker) {
-        const date = new Date();
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
-        picker.$emit('pick', date);
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 30)
+        picker.$emit('pick', date)
       }
     },
     {
       text: '最近三个月',
       onClick(picker) {
-        const date = new Date();
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 90);
-        picker.$emit('pick', date);
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 90)
+        picker.$emit('pick', date)
       }
     }
   ]
+}
+// 根据参数筛选出对应的数据字典列表
+/**
+ * @param {String} option 数据字典名称
+ */
+export function findList(option, sysList) {
+  let arr = []
+  sysList.forEach(item => {
+    if (item.dictionaryNo === option) {
+      arr = item.dictionaryList
+    }
+  })
+  return arr
 }

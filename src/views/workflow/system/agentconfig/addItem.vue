@@ -34,7 +34,7 @@
             <el-input
               v-model="rowData.beAgentPersonId"
               placeholder="请输入被代办人"
-              :disabled="!isAdd"
+              disabled
             />
           </el-form-item>
         </el-col>
@@ -90,16 +90,16 @@ export default {
   data() {
     const validateEndTime = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('结束时间不能为空'));
+        callback(new Error('结束时间不能为空'))
       } else {
         const startTime = Number(moment(this.rowData.beginTime).format('YYYYMMDD'))
         const endTime = Number(moment(value).format('YYYYMMDD'))
         if (startTime > endTime) {
-          callback(new Error('开始时间不能大于结束时间'));
+          callback(new Error('开始时间不能大于结束时间'))
         }
-        callback();
+        callback()
       }
-    };
+    }
     return {
       rules: {
         systemNo: [{ required: true, trigger: 'change', message: '所属系统不能为空' }],
@@ -165,10 +165,10 @@ export default {
 
 <style lang="scss" scoped>
 .el-select{
-  width: 100%;
+  width: 100%
 }
 .el-col{
-  margin-bottom: 10px;
+  margin-bottom: 10px
 }
 .end{
   margin-bottom: 0

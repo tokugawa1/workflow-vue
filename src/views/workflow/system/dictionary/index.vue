@@ -20,8 +20,10 @@
                 placeholder="请选择"
               >
                 <el-option
-                  label="张三"
-                  value="001"
+                  v-for="item in sysDicList"
+                  :key="item.key"
+                  :label="item.name"
+                  :value="item.key"
                 />
               </el-select>
             </el-form-item>
@@ -60,7 +62,7 @@
           label="操作"
         >
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click.native.prevent="delete(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click.native.prevent="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,27 +76,48 @@
         @size-change="handleSizeChange"
       />
     </el-card>
+    <detail
+      v-if="visible"
+      :visible="visible"
+      :row-data="detailForm"
+      :system-dic-list="sysDicList"
+      @changeVisible="updateVisible"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { Message } from 'element-ui'
+import { findList } from '@/utils/index.js'
+import detail from '@/views/workflow/system/dictionary/detail'
 export default {
   name: 'Dictionary',
+  components: {
+    detail
+  },
   data() {
     return {
       // 表单数据
       ruleForm: {
         type: ''
       },
+      detailForm: {
+        type: '',
+        enumKey: '',
+        enumName: '',
+        creareUser: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).userNo : ''
+      },
+      visible: false, // 弹窗状态
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
       rowData: {} // 当前行选中的数据
     }
   },
   computed: {
-    ...mapState(['dictionary'])
+    ...mapState(['dictionary']),
+    sysDicList: function() {
+      return findList('DICTIONARY_TYPE', this.dictionary.sysList)
+    }
   },
   created() {
     const params = {
@@ -102,14 +125,22 @@ export default {
       pageNo: '1'
     }
     this.initData(params)
+    this.initDic()
   },
   methods: {
     // 初始化
     initData(payload) {
-      this.ruleForm = payload
+      this.ruleForm.type = payload.type
       this.maxResults = payload.maxResults
       this.pageNo = payload.pageNo
       this.$store.dispatch('dictionary/getList', payload)
+    },
+    // 初始化数据字典
+    initDic() {
+      const params = [
+        { type: 'DICTIONARY_TYPE' }
+      ]
+      this.$store.dispatch('dictionary/getSys', params)
     },
     // 查询
     searchForm(formName) {
@@ -129,13 +160,31 @@ export default {
       // this.$refs[formName].resetFields()
       this.$set(this.ruleForm, 'type', '')
     },
+    // 添加
+    add() {
+      this.visible = true
+    },
     // 点击当前行
     getRowData(val) {
       this.rowData = val
     },
     // 删除
-    delete(row) {
-      console.log(row)
+    deleteItem(row) {
+      const params = {
+        id: row._id
+      }
+      this.$store.dispatch('dictionary/deleteList', params).then(res => {
+        if (res) {
+          this.$message.success('删除成功')
+          const param = {
+            maxResults: '10',
+            pageNo: '1'
+          }
+          this.initData(param)
+        } else {
+          this.$message.error('删除失败')
+        }
+      })
     },
     // pageSize 改变
     handleSizeChange(val) {
@@ -154,6 +203,15 @@ export default {
         maxResults: _this.maxResults,
         pageNo: val,
         ...this.ruleForm
+      }
+      this.initData(params)
+    },
+    // 接收子组件的状态
+    updateVisible(code) {
+      this.visible = code
+      const params = {
+        maxResults: '10',
+        pageNo: '1'
       }
       this.initData(params)
     }

@@ -148,9 +148,9 @@
       v-if="visible"
       :visible.sync="visible"
       :system-dic-list="systemDicList"
-      @changeVisible="updateVisible"
-      :isAdd="isAdd"
+      :is-add="isAdd"
       :row-data="detailForm"
+      @changeVisible="updateVisible"
     />
   </div>
 </template>
@@ -158,7 +158,7 @@
 <script>
 import { mapState } from 'vuex'
 import moment from 'moment'
-import { ragerOptions } from '@/utils/index.js'
+import { ragerOptions, findList } from '@/utils/index.js'
 import addItem from '@/views/workflow/system/agentconfig/addItem'
 export default {
   name: 'AgentConfig',
@@ -190,10 +190,10 @@ export default {
     ...mapState(['agentconfig']),
     // 状态的数组
     statusDicList: function() {
-      return this.findList('YES_OR_NO')
+      return findList('YES_OR_NO', this.agentconfig.sysList)
     },
     systemDicList: function() {
-      return this.findList('SUB_SYSTEM')
+      return findList('SUB_SYSTEM', this.agentconfig.sysList)
     }
   },
   created() {
@@ -220,16 +220,6 @@ export default {
         { type: 'SUB_SYSTEM' }
       ]
       this.$store.dispatch('agentconfig/getSys', params)
-    },
-    // 获取筛选的数据字典
-    findList(option) {
-      let arr = []
-      this.agentconfig.sysList.forEach(item => {
-        if (item.dictionaryNo === option) {
-          arr = item.dictionaryList
-        }
-      })
-      return arr
     },
     // 查询
     searchForm(formName) {
@@ -313,7 +303,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-          const params = {
+        const params = {
           id: row._id
         }
         this.$store.dispatch('agentconfig/deleteList', params).then(res => {

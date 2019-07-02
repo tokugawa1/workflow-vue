@@ -103,7 +103,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Message } from 'element-ui'
 export default {
   name: 'Defining',
   data() {
@@ -133,7 +132,9 @@ export default {
   methods: {
     // 初始化
     initData(payload) {
-      this.ruleForm = payload
+      this.ruleForm.prcDefKey = payload.prcDefKey
+      this.ruleForm.name = payload.name
+      this.ruleForm.deployStatus = payload.deployStatus
       this.maxResults = payload.maxResults
       this.pageNo = payload.pageNo
       this.$store.dispatch('finishdefine/getList', payload)

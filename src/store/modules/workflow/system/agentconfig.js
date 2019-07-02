@@ -8,7 +8,7 @@ import {
 
 const state = {
   list: {}, // 代办配置数据
-  sysList: [], // 数据字典返回的值
+  sysList: [] // 数据字典返回的值
 }
 
 const mutations = {

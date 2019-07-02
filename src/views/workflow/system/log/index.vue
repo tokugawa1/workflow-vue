@@ -109,7 +109,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Message } from 'element-ui'
 export default {
   name: 'Log',
   data() {

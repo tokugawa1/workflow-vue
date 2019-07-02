@@ -78,17 +78,16 @@
     </el-card>
     <detail
       v-if="visible"
-      :visible.sync="visible"
-      @changeVisible="updateVisible"
       :isAdd="isAdd"
+      :visible.sync="visible"
       :row-data="detailForm"
+      @changeVisible="updateVisible"
     />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { Message } from 'element-ui'
 import detail from '@/views/workflow/system/systemdata/detail'
 export default {
   name: 'SystemData',
