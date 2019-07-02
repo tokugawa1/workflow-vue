@@ -4,23 +4,22 @@
       <div slot="header">
         <span>运行中流程定义列表</span>
       </div>
+      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+        <el-radio-button :label="false">展开</el-radio-button>
+        <el-radio-button :label="true">收起</el-radio-button>
+      </el-radio-group>
       <el-Row>
-        <el-col :span="4">
+        <el-col :span="isCollapse ? 0 : 5" class="menuItem">
           <el-menu
-            :default-active="activeKey"
-            :default-openeds="activeArr"
+            default-active="00"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
+            @select="handleSelect"
+            :collapse="isCollapse"
           >
-            <el-submenu
-              index="1"
-            >
-              <template
-                slot="title"
-              >
-                <i class="el-icon-location" />
-                <span>流程分类</span>
+            <el-submenu index="1">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span slot="title">流程分类</span>
               </template>
               <el-menu-item
                 v-for="item in systemDicList"
@@ -32,7 +31,7 @@
             </el-submenu>
           </el-menu>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="isCollapse ? 24 : 19">
           <el-form
             ref="ruleForm"
             :model="ruleForm"
@@ -152,7 +151,8 @@ export default {
       pageNo: '1', // 当前页
       rowData: {}, // 当前行选中的数据
       activeKey: '1', // 选中的菜单
-      activeArr: ['1'] // 选中的菜单数组
+      activeArr: ['00'], // 选中的菜单数组
+      isCollapse: false // 是否折叠
     }
   },
   computed: {
@@ -170,7 +170,7 @@ export default {
     const params = {
       maxResults: '10',
       pageNo: '1',
-      prcdefType: '00'
+      prcdefType: this.activeArr[0]
     }
     this.initDic()
     this.initData(params)
@@ -200,6 +200,7 @@ export default {
           const params = {
             maxResults: '10',
             pageNo: '1',
+            prcdefType: this.activeArr[0],
             ...this.ruleForm
           }
           this.initData(params)
@@ -223,7 +224,29 @@ export default {
     },
     // 归档
     confirmDelete(row) {
-      console.log(row)
+      this.$confirm('此操作将删除该条数据，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          id: row._id
+        }
+        this.$store.dispatch('defining/deleteList', params).then(res => {
+          if (res) {
+            this.$message.success('删除成功')
+            const params = {
+              maxResults: '10',
+              pageNo: '1',
+              prcdefType: this.activeArr[0]
+            }
+            this.initData(params)
+          } else {
+            this.$message.error('删除失败')
+          }
+        })
+      }).catch(action => {
+        return
+      })
     },
     // pageSize 改变
     handleSizeChange(val) {
@@ -231,6 +254,7 @@ export default {
       const params = {
         maxResults: val,
         pageNo: _this.pageNo,
+        prcdefType: this.activeArr[0],
         ...this.ruleForm
       }
       this.initData(params)
@@ -241,6 +265,7 @@ export default {
       const params = {
         maxResults: _this.maxResults,
         pageNo: val,
+        prcdefType: this.activeArr[0],
         ...this.ruleForm
       }
       this.initData(params)
@@ -248,13 +273,23 @@ export default {
     // 菜单打开
     handleOpen(key, keyPath) {
       this.activeKey = key
-      this.activeArr = keyPath
     },
     // 菜单关闭
     handleClose(key, keyPath) {
       this.activeKey = key
+    },
+    // 选中
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
+      this.activeKey = key
       this.activeArr = keyPath
-    }
+      const params = {
+        maxResults: '10',
+        pageNo: '1',
+        prcdefType: keyPath[1]
+      }
+      this.initData(params)
+    },
   }
 }
 </script>
@@ -268,5 +303,12 @@ export default {
 }
 .rightItem{
   text-align: right;
+}
+.el-menu-item{
+  min-width: 180px;
+  text-align: center;
+}
+.menuItem{
+  padding-right: 20px;
 }
 </style>

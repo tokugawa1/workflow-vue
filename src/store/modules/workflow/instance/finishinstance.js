@@ -25,6 +25,16 @@ const actions = {
         reject(error)
       })
     })
+  },
+  // 归档
+  deleteList({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      deleteList(payload).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

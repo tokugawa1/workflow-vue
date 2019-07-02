@@ -42,6 +42,16 @@ const actions = {
         reject(error)
       })
     })
+  },
+  // 删除
+  deleteList({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      deleteList(payload).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

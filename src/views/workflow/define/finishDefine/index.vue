@@ -4,107 +4,140 @@
       <div slot="header">
         <span>运行中流程定义列表</span>
       </div>
-      <el-form
-        ref="ruleForm"
-        :model="ruleForm"
-        class="login-info"
-        size="mini"
-      >
-        <el-row>
-          <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="发布状态:" label-width="150px" prop="deployStatus">
-              <el-select
-                v-model="ruleForm.deployStatus"
-                clearable
-                placeholder="请选择"
+      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+        <el-radio-button :label="false">展开</el-radio-button>
+        <el-radio-button :label="true">收起</el-radio-button>
+      </el-radio-group>
+      <el-Row>
+        <el-col :span="isCollapse ? 0 : 5" class="menuItem">
+          <el-menu
+            default-active="00"
+            class="el-menu-vertical-demo"
+            @select="handleSelect"
+            :collapse="isCollapse"
+          >
+            <el-submenu index="1">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span slot="title">流程分类</span>
+              </template>
+              <el-menu-item
+                v-for="item in systemDicList"
+                :key="item.key"
+                :index="item.key"
               >
-                <el-option
-                  label="张三"
-                  value="001"
-                />
-              </el-select>
+                {{ item.name }}
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-col>
+        <el-col :span="isCollapse ? 24 : 19">
+          <el-form
+            ref="ruleForm"
+            :model="ruleForm"
+            class="login-info"
+            size="mini"
+          >
+            <el-row>
+              <el-col :md="12" :xs="24" :sm="24">
+                <el-form-item label="发布状态:" label-width="150px" prop="deployStatus">
+                  <el-select
+                    v-model="ruleForm.deployStatus"
+                    clearable
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in statusDicList"
+                      :key="item.key"
+                      :label="item.name"
+                      :value="item.key"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :md="12" :xs="24" :sm="24">
+                <el-form-item label="流程定义key:" label-width="150px" prop="prcDefKey">
+                  <el-input
+                    v-model="ruleForm.prcDefKey"
+                    placeholder="请输入流程定义key"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :md="12" :xs="24" :sm="24">
+                <el-form-item label="流程名称:" label-width="150px" prop="name">
+                  <el-input
+                    v-model="ruleForm.name"
+                    placeholder="请输入流程名称"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item class="rightItem">
+              <el-button type="primary" @click.native.prevent="searchForm('ruleForm')">查询</el-button>
+              <el-button @click.native.prevent="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
-          </el-col>
-          <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="流程定义key:" label-width="150px" prop="prcDefKey">
-              <el-input
-                v-model="ruleForm.prcDefKey"
-                placeholder="请输入流程定义key"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :md="12" :xs="24" :sm="24">
-            <el-form-item label="流程名称:" label-width="150px" prop="name">
-              <el-input
-                v-model="ruleForm.name"
-                placeholder="请输入流程名称"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item class="rightItem">
-          <el-button type="primary" @click.native.prevent="searchForm('ruleForm')">查询</el-button>
-          <el-button @click.native.prevent="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-      <el-table
-        ref="singleTable"
-        :data="finishdefine.list.RetList"
-        highlight-current-row
-        style="width: 100%"
-        border
-        size="mini"
-        @current-change="getRowData"
-      >
-        <el-table-column
-          property="prcdefTypeName"
-          label="流程定义类型"
-        />
-        <el-table-column
-          property="prcDefKey"
-          label="流程定义key"
-        />
-        <el-table-column
-          property="name"
-          label="流程标题"
-        />
-        <el-table-column
-          property="version"
-          label="版本号"
-        />
-        <el-table-column
-          property="systemName"
-          label="所属系统名称"
-        />
-        <el-table-column
-          property="deployStatusName"
-          label="发布状态"
-        />
-        <el-table-column
-          label="操作"
-        >
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click.native.prevent="confirmDelete(scope.row)">恢复</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        :total="finishdefine.list.total"
-        layout="total, sizes, prev, pager, next, jumper"
-        :current-page="finishdefine.list.current"
-        :page-sizes="[10, 20, 50]"
-        :page-size="finishdefine.list.pageSize"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+          </el-form>
+          <el-table
+            ref="singleTable"
+            :data="finishdefine.list.RetList"
+            highlight-current-row
+            style="width: 100%"
+            border
+            size="mini"
+            @current-change="getRowData"
+          >
+            <el-table-column
+              property="prcdefTypeName"
+              label="流程定义类型"
+            />
+            <el-table-column
+              property="prcDefKey"
+              label="流程定义key"
+            />
+            <el-table-column
+              property="name"
+              label="流程标题"
+            />
+            <el-table-column
+              property="version"
+              label="版本号"
+            />
+            <el-table-column
+              property="systemName"
+              label="所属系统名称"
+            />
+            <el-table-column
+              property="deployStatusName"
+              label="发布状态"
+            />
+            <el-table-column
+              label="操作"
+            >
+              <template slot-scope="scope">
+                <el-button type="text" size="small" @click.native.prevent="confirmDelete(scope.row)">恢复</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            :total="finishdefine.list.total"
+            layout="total, sizes, prev, pager, next, jumper"
+            :current-page="finishdefine.list.current"
+            :page-sizes="[10, 20, 50]"
+            :page-size="finishdefine.list.pageSize"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          />
+        </el-col>
+      </el-Row>
     </el-card>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { findList } from '@/utils/index.js'
 export default {
-  name: 'Defining',
+  name: 'FinishDefine',
   data() {
     return {
       // 表单数据
@@ -115,18 +148,30 @@ export default {
       },
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
-      rowData: {} // 当前行选中的数据
+      rowData: {}, // 当前行选中的数据
+      activeKey: '1', // 选中的菜单
+      activeArr: ['00'], // 选中的菜单数组
+      isCollapse: false // 是否折叠
     }
   },
   computed: {
-    ...mapState(['finishdefine'])
+    ...mapState(['finishdefine', 'defining']),
+    // 发布状态
+    statusDicList: function() {
+      return findList('PUBLISH_STATUS', this.defining.sysList)
+    },
+    // 所属系统
+    systemDicList: function() {
+      return findList('PROCESS_CLASSIFICATION_TYPE', this.defining.sysList)
+    }
   },
   created() {
     const params = {
       maxResults: '10',
       pageNo: '1',
-      prcdefType: '00'
+      prcdefType: this.activeArr[0]
     }
+    this.initDic()
     this.initData(params)
   },
   methods: {
@@ -139,6 +184,14 @@ export default {
       this.pageNo = payload.pageNo
       this.$store.dispatch('finishdefine/getList', payload)
     },
+    // 查询发布状态和所属系统
+    initDic() {
+      const params = [
+        { type: 'PUBLISH_STATUS' },
+        { type: 'PROCESS_CLASSIFICATION_TYPE' }
+      ]
+      this.$store.dispatch('defining/getSys', params)
+    },
     // 查询
     searchForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -146,6 +199,7 @@ export default {
           const params = {
             maxResults: '10',
             pageNo: '1',
+            prcdefType: this.activeArr[0],
             ...this.ruleForm
           }
           this.initData(params)
@@ -165,7 +219,29 @@ export default {
     },
     // 恢复
     confirmDelete(row) {
-      console.log(row)
+      this.$confirm('此操作将删除该条数据，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          id: row._id
+        }
+        this.$store.dispatch('finishdefine/deleteList', params).then(res => {
+          if (res) {
+            this.$message.success('恢复成功')
+            const params = {
+              maxResults: '10',
+              pageNo: '1',
+              prcdefType: this.activeArr[0]
+            }
+            this.initData(params)
+          } else {
+            this.$message.error('恢复失败')
+          }
+        })
+      }).catch(action => {
+        return
+      })
     },
     // pageSize 改变
     handleSizeChange(val) {
@@ -173,6 +249,7 @@ export default {
       const params = {
         maxResults: val,
         pageNo: _this.pageNo,
+        prcdefType: this.activeArr[0],
         ...this.ruleForm
       }
       this.initData(params)
@@ -183,10 +260,31 @@ export default {
       const params = {
         maxResults: _this.maxResults,
         pageNo: val,
+        prcdefType: this.activeArr[0],
         ...this.ruleForm
       }
       this.initData(params)
-    }
+    },
+    // 菜单打开
+    handleOpen(key, keyPath) {
+      this.activeKey = key
+    },
+    // 菜单关闭
+    handleClose(key, keyPath) {
+      this.activeKey = key
+    },
+    // 选中
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
+      this.activeKey = key
+      this.activeArr = keyPath
+      const params = {
+        maxResults: '10',
+        pageNo: '1',
+        prcdefType: keyPath[1]
+      }
+      this.initData(params)
+    },
   }
 }
 </script>
@@ -200,5 +298,12 @@ export default {
 }
 .rightItem{
   text-align: right;
+}
+.el-menu-item{
+  min-width: 180px;
+  text-align: center;
+}
+.menuItem{
+  padding-right: 20px;
 }
 </style>

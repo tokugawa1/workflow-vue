@@ -117,14 +117,24 @@
         @size-change="handleSizeChange"
       />
     </el-card>
+    <circulation
+      v-if="visible"
+      :visible="visible"
+      :row-data="rowData"
+      @ChangeVisible="updateVisible"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
+import circulation from '@/views/workflow/instance/instancing/circulation'
 export default {
-  name: 'FinishInstance',
+  name: 'Instancing',
+  components:{
+    circulation
+  },
   data() {
     return {
       // 表单数据
@@ -135,6 +145,7 @@ export default {
         version: '',
         procDefName: ''
       },
+      visible: false, // 弹窗状态
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
       rowData: {} // 当前行选中的数据
@@ -186,11 +197,33 @@ export default {
     },
     // 流转意见
     showCirculation(row) {
-      console.log(row)
+      this.rowData = row
+      this.visible = true
     },
     // 归档
     confirmDelete(row) {
-      console.log(row)
+      this.$confirm('此操作将删除该条数据，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        const params = {
+          id: row._id
+        }
+        this.$store.dispatch('instancing/deleteList', params).then(res => {
+          if (res) {
+            this.$message.success('归档成功')
+            const params = {
+              maxResults: '10',
+              pageNo: '1'
+            }
+            this.initData(params)
+          } else {
+            this.$message.error('归档失败')
+          }
+        })
+      }).catch(action => {
+        return
+      })
     },
     // pageSize 改变
     handleSizeChange(val) {
@@ -213,6 +246,10 @@ export default {
         ...this.ruleForm
       }
       this.initData(params)
+    },
+    // 子组件关闭
+    updateVisible(code) {
+      this.visible = code
     }
   }
 }

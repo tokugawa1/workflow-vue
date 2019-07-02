@@ -138,14 +138,24 @@
         @size-change="handleSizeChange"
       />
     </el-card>
+    <circulation
+      v-if="visible"
+      :visible="visible"
+      :row-data="rowData"
+      @ChangeVisible="updateVisible"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
+import transferperson from '@/views/workflow/task/transferperson'
 export default {
   name: 'Tasking',
+  components:{
+    transferperson
+  },
   data() {
     return {
       // 表单数据
@@ -160,7 +170,8 @@ export default {
       },
       maxResults: '10', // 每页10条
       pageNo: '1', // 当前页
-      rowData: {} // 当前行选中的数据
+      rowData: {}, // 当前行选中的数据
+      visible: false, // 转办人员弹窗
     }
   },
   computed: {
