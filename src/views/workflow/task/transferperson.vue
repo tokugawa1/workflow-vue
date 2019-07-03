@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="添加"
+    title="转办人员列表"
     :visible="visible"
     width="40%"
     :before-close="modalClose"
@@ -14,35 +14,19 @@
     >
       <el-row>
         <el-col :md="20" :xs="20" :sm="20">
-          <el-form-item label="字典类型:" label-width="150px" prop="type">
+          <el-form-item label="转办人员:" label-width="150px" prop="targetAssignee">
             <el-select
-              v-model="rowData.type"
+              v-model="targetAssignee"
               clearable
               placeholder="请选择"
             >
               <el-option
-                v-for="item in systemDicList"
-                :key="item.key"
-                :label="item.name"
-                :value="item.key"
+                v-for="item in approving.turnPersonList"
+                :key="item.userNo"
+                :label="item.userNm"
+                :value="item.userNo"
               />
             </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :md="20" :xs="20" :sm="20">
-          <el-form-item label="字典key:" label-width="150px" prop="enumKey">
-            <el-input
-              v-model="rowData.enumKey"
-              placeholder="请输入字典key"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :md="20" :xs="20" :sm="20">
-          <el-form-item label="字典名称:" label-width="150px" prop="enumName">
-            <el-input
-              v-model="rowData.enumName"
-              placeholder="请输入字典名称"
-            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -54,21 +38,29 @@
   </el-dialog>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Detail',
   props: {
     visible: { type: Boolean },
-    rowData: { type: Object },
-    systemDicList: { type: Array }
+    rowData: { type: Object }
   },
   data() {
     return {
       rules: {
-        type: [{ required: true, trigger: 'change', message: '字典类型不能为空' }],
-        enumKey: [{ required: true, trigger: 'blur', message: '字典key不能为空' }],
-        enumName: [{ required: true, trigger: 'blur', message: '字典名称不能为空' }]
-      }
+        type: [{ required: true, trigger: 'change', message: '转办人员不能为空' }]
+      },
+      targetAssignee: '' // 转办人员
     }
+  },
+  computed: {
+    ...mapState(['approving'])
+  },
+  created() {
+    const params = {
+      id: this.rowData._id
+    }
+    this.$store.dispatch('approving/getturnPersonList', params)
   },
   methods: {
     // 取消
@@ -80,21 +72,15 @@ export default {
       this.$refs['detailForm'].validate(valid => {
         if (valid) {
           const params = {
-            enums: [
-              {
-                enumKey: this.rowData.enumKey,
-                enumName: this.rowData.enumName,
-                creareUser: this.rowData.creareUser,
-                type: this.rowData.type
-              }
-            ]
+            targetAssignee: this.targetAssignee,
+            id: this.rowData._id
           }
-          this.$store.dispatch('dictionary/addList', params).then(res => {
+          this.$store.dispatch('approving/turnList', params).then(res => {
             if (res) {
-              this.$message.success('新增成功')
+              this.$message.success('转办成功')
               this.$emit('changeVisible', false)
             } else {
-              this.$message.success('新增失败')
+              this.$message.success('转办失败')
             }
           })
         }

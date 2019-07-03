@@ -138,11 +138,17 @@
         @size-change="handleSizeChange"
       />
     </el-card>
-    <circulation
+    <transferperson
       v-if="visible"
       :visible="visible"
       :row-data="rowData"
-      @ChangeVisible="updateVisible"
+      @changeVisible="updateVisible"
+    />
+    <rowback
+      v-if="backStatus"
+      :visible="backStatus"
+      :row-data="rowData"
+      @changeBackVisible="updateBackVisible"
     />
   </div>
 </template>
@@ -151,10 +157,12 @@
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 import transferperson from '@/views/workflow/task/transferperson'
+import rowback from '@/views/workflow/task/rowback'
 export default {
   name: 'Tasking',
   components:{
-    transferperson
+    transferperson,
+    rowback
   },
   data() {
     return {
@@ -172,6 +180,7 @@ export default {
       pageNo: '1', // 当前页
       rowData: {}, // 当前行选中的数据
       visible: false, // 转办人员弹窗
+      backStatus: false // 退回弹窗
     }
   },
   computed: {
@@ -222,15 +231,17 @@ export default {
     },
     // 审批表单
     showTask(row) {
-      console.log(row)
+      this.rowData = row
     },
     // 任务转办
     showTransferPersonForm(row) {
-      console.log(row)
+      this.rowData = row
+      this.visible = true
     },
     // 退回
     showRowBack(row) {
-      console.log(row)
+      this.rowData = row
+      this.backStatus = true
     },
     // pageSize 改变
     handleSizeChange(val) {
@@ -249,6 +260,24 @@ export default {
         maxResults: _this.maxResults,
         pageNo: val,
         ...this.ruleForm
+      }
+      this.initData(params)
+    },
+    // 关闭弹窗
+    updateVisible(code) {
+      this.visible = code
+      const params = {
+        maxResults: '10',
+        pageNo: '1'
+      }
+      this.initData(params)
+    },
+    // 关闭退出弹框
+    updateBackVisible(code) {
+      this.backStatus = code
+      const params = {
+        maxResults: '10',
+        pageNo: '1'
       }
       this.initData(params)
     }
