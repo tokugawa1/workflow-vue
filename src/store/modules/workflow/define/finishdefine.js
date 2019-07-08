@@ -18,7 +18,6 @@ const actions = {
   getList({ commit }, payload) {
     return new Promise((resolve, reject) => {
       finishDefineList(payload).then(response => {
-        console.log(response)
         commit('setData', response.ResponseBody)
         resolve()
       }).catch(error => {

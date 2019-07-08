@@ -95,12 +95,12 @@ export default {
     const params = {
       id: this.rowData._id
     }
-    this.$store.dispatch('approving/getNextNodeList', params)
+    this.$store.dispatch('approving/getBackNodeList', params)
   },
   methods: {
     // 取消
     modalClose() {
-      this.$emit('changeBackVisible', false) // 直接修改父组件的属性
+      this.$emit('changeBackVisible', {type: '取消', status: false, name: '退回'}) // 直接修改父组件的属性
     },
     // 确定
     sure() {
@@ -114,7 +114,7 @@ export default {
           this.$store.dispatch('approving/goback', params).then(res => {
             if (res) {
               this.$message.success('退回成功')
-              this.$emit('changeBackVisible', false)
+              this.$emit('changeBackVisible', {type: '确定', status: false, name: '退回'})
             } else {
               this.$message.success('退回失败')
             }

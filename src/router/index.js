@@ -55,12 +55,33 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/extend',
+    component: Layout,
+    // redirect: '/dashboard',
+    children: [
+      {
+        path: '/extend',
+        name: 'Extend',
+        component: () => import('@/views/workflow/define/extend/index'),
+        hidden: true
+      },
+      {
+        path: '/extend/extendadd',
+        name: 'ExtendAdd',
+        component: () => import('@/views/workflow/define/extend/extendAdd'),
+        hidden: true
+      }
+    ]
   }
 ]
 

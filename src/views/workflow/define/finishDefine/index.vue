@@ -275,7 +275,6 @@ export default {
     },
     // 选中
     handleSelect(key, keyPath) {
-      console.log(key, keyPath)
       this.activeKey = key
       this.activeArr = keyPath
       const params = {

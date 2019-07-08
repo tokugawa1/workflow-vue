@@ -56,7 +56,6 @@ export default {
     ...mapState(['instancing'])
   },
   created() {
-    console.log(this.rowData)
     const params = {
       id: this.rowData._id
     }

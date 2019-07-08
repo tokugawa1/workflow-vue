@@ -15,7 +15,6 @@ const actions = {
   getList({ commit }, payload) {
     return new Promise((resolve, reject) => {
       getNotice(payload).then(response => {
-        console.log(response)
         commit('setData', response.ResponseBody.RetList)
         resolve()
       }).catch(error => {

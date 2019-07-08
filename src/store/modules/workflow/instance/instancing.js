@@ -6,7 +6,7 @@ import {
 
 const state = {
   list: {}, // 代办配置数据
-  commonList: [] // 流转意见列表 
+  commonList: [] // 流转意见列表
 }
 
 const mutations = {
@@ -15,7 +15,7 @@ const mutations = {
   },
   commonData: (state, data) => {
     state.commonList = data
-  },
+  }
 }
 
 const actions = {
@@ -23,7 +23,6 @@ const actions = {
   getList({ commit }, payload) {
     return new Promise((resolve, reject) => {
       instancingList(payload).then(response => {
-        console.log(response)
         commit('setData', response.ResponseBody)
         resolve()
       }).catch(error => {
@@ -35,7 +34,6 @@ const actions = {
   commontList({ commit }, payload) {
     return new Promise((resolve, reject) => {
       commontList(payload).then(response => {
-        console.log(response)
         commit('commonData', response.ResponseBody.RetList)
         resolve()
       }).catch(error => {

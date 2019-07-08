@@ -148,7 +148,13 @@
       v-if="backStatus"
       :visible="backStatus"
       :row-data="rowData"
-      @changeBackVisible="updateBackVisible"
+      @changeBackVisible="updateVisible"
+    />
+    <approve
+      v-if="taskStatus"
+      :visible="taskStatus"
+      :row-data="rowData"
+      @changeTaskVisible="updateVisible"
     />
   </div>
 </template>
@@ -158,11 +164,13 @@ import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 import transferperson from '@/views/workflow/task/transferperson'
 import rowback from '@/views/workflow/task/rowback'
+import approve from '@/views/workflow/task/approve'
 export default {
   name: 'Tasking',
   components:{
     transferperson,
-    rowback
+    rowback,
+    approve
   },
   data() {
     return {
@@ -180,7 +188,8 @@ export default {
       pageNo: '1', // 当前页
       rowData: {}, // 当前行选中的数据
       visible: false, // 转办人员弹窗
-      backStatus: false // 退回弹窗
+      backStatus: false, // 退回弹窗
+      taskStatus: false // 流程提交弹窗
     }
   },
   computed: {
@@ -232,6 +241,7 @@ export default {
     // 审批表单
     showTask(row) {
       this.rowData = row
+      this.taskStatus = true
     },
     // 任务转办
     showTransferPersonForm(row) {
@@ -265,21 +275,22 @@ export default {
     },
     // 关闭弹窗
     updateVisible(code) {
-      this.visible = code
-      const params = {
-        maxResults: '10',
-        pageNo: '1'
+      if (code.name === '退回') {
+        this.backStatus = code.status
       }
-      this.initData(params)
-    },
-    // 关闭退出弹框
-    updateBackVisible(code) {
-      this.backStatus = code
-      const params = {
-        maxResults: '10',
-        pageNo: '1'
+      if (code.name === '转办') {
+        this.visible = code.status
       }
-      this.initData(params)
+      if (code.name === '流程处理') {
+        this.taskStatus = code.status
+      }
+      if (code.type === '确定') {
+        const params = {
+          maxResults: '10',
+          pageNo: '1'
+        }
+        this.initData(params)
+      }
     }
   }
 }

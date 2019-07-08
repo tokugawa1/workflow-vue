@@ -36,7 +36,6 @@ const actions = {
   getSys({ commit }, payload) {
     return new Promise((resolve, reject) => {
       agentconfigSystem(payload).then(response => {
-        console.log(response)
         commit('setSysData', response.ResponseBody.RetList)
         resolve()
       }).catch(error => {

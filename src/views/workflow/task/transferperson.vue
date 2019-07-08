@@ -65,7 +65,7 @@ export default {
   methods: {
     // 取消
     modalClose() {
-      this.$emit('changeVisible', false) // 直接修改父组件的属性
+      this.$emit('changeVisible', {type: '取消', status: false, name: '转办'}) // 直接修改父组件的属性
     },
     // 确定
     sure() {
@@ -78,7 +78,7 @@ export default {
           this.$store.dispatch('approving/turnList', params).then(res => {
             if (res) {
               this.$message.success('转办成功')
-              this.$emit('changeVisible', false)
+              this.$emit('changeVisible', {type: '确定', status: false, name: '转办'})
             } else {
               this.$message.success('转办失败')
             }

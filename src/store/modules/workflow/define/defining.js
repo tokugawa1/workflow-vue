@@ -23,7 +23,6 @@ const actions = {
   getList({ commit }, payload) {
     return new Promise((resolve, reject) => {
       definingList(payload).then(response => {
-        console.log(response)
         commit('setData', response.ResponseBody)
         resolve()
       }).catch(error => {
@@ -35,7 +34,6 @@ const actions = {
   getSys({ commit }, payload) {
     return new Promise((resolve, reject) => {
       statusList(payload).then(response => {
-        console.log(response)
         commit('setSysData', response.ResponseBody.RetList)
         resolve()
       }).catch(error => {

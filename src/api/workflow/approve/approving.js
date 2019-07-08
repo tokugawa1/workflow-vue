@@ -27,7 +27,7 @@ export function turnTask(data) {
 }
 
 // 退回节点
-export function nextNode(data) {
+export function backNode(data) {
   return request({
     url: '/approving/approve-back-node',
     method: 'POST',
@@ -54,7 +54,7 @@ export function taskNextPerson(data) {
 }
 
 // 提交
-export function commit(data) {
+export function commitTask(data) {
   return request({
     url: '/approving/approve-commit',
     method: 'POST',

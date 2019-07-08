@@ -49,6 +49,7 @@ export default {
 <style lang="scss" scoped>
 .box{
   cursor: pointer;
+  padding-right: 20px;
   .box_list{
     text-align: center;
     h2{

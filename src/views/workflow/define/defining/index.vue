@@ -220,7 +220,10 @@ export default {
     },
     // 流程定义扩展属性
     showExtend(row) {
-      console.log(row)
+      this.$router.push({
+        path: '/extend',
+        query: row
+      })
     },
     // 归档
     confirmDelete(row) {
@@ -280,7 +283,6 @@ export default {
     },
     // 选中
     handleSelect(key, keyPath) {
-      console.log(key, keyPath)
       this.activeKey = key
       this.activeArr = keyPath
       const params = {
@@ -289,7 +291,7 @@ export default {
         prcdefType: keyPath[1]
       }
       this.initData(params)
-    },
+    }
   }
 }
 </script>
