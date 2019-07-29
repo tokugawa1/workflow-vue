@@ -162,7 +162,8 @@ export default {
         orgNm: '',
         orgNo:'',
         positionNm: '',
-        positionNo: ''
+        positionNo: '',
+        id: newArray.length += 1
       }
       newArray.push(obj)
       console.log('arr', newArray)

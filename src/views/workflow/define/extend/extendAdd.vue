@@ -280,7 +280,7 @@ export default {
     // 获取子组件传来的array数量
     updateArrayNum(code) {
       console.log('3', code)
-      this.ruleForm = code
+      this.userRule = code
     }
   }
 }
