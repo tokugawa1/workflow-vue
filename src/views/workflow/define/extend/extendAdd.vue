@@ -148,6 +148,7 @@
       :loan-list="loanOrgLvlist"
       :rule-list="ruleList"
       @changeVisible="updateVisible"
+      @changeArrayNum="updateArrayNum"
     />
   </div>
 </template>
@@ -275,6 +276,11 @@ export default {
     // 返回
     goback() {
       this.$router.go(-1)
+    },
+    // 获取子组件传来的array数量
+    updateArrayNum(code) {
+      console.log('3', code)
+      this.ruleForm = code
     }
   }
 }

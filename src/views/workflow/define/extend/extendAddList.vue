@@ -102,7 +102,7 @@
         </el-table-column>
       </el-table>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button type="primary">保存</el-button>
         <el-button @click="modalClose">取消</el-button>
       </el-form-item>
     </el-form>
@@ -146,6 +146,27 @@ export default {
     // 取消
     modalClose() {
       this.$emit('changeVisible', false) // 直接修改父组件的属性
+    },
+    // 新增
+    addItem() {
+      const newArray = this.list
+      const obj = {
+        userRuleNm: '',
+        userRuleNo: '',
+        taskDefinitionName: '',
+        taskDefinitionKey: '',
+        groupNm: '',
+        groupNo: '',
+        loanOrgLvlNm: '',
+        loanOrgLvl: '',
+        orgNm: '',
+        orgNo:'',
+        positionNm: '',
+        positionNo: ''
+      }
+      newArray.push(obj)
+      console.log('arr', newArray)
+      this.$emit('changeArrayNum', newArray)
     }
   }
 }
