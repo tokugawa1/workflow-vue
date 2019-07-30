@@ -1,115 +1,123 @@
 <template>
-  <el-dialog
-    title="新增"
-    :visible="visible"
-    width="100%"
-    :before-close="modalClose"
-  >
-    <div class="rightBtn">
-      <el-button type="primary" size="mini" @click.native.prevent="addItem">新增</el-button>
-    </div>
-    <el-form
-      ref="ruleForm"
-      size="mini"
+  <div>
+    <el-dialog
+      title="新增"
+      :visible="visible"
+      width="100%"
+      :before-close="modalClose"
     >
-      <el-table
-        :data="list"
-        highlight-current-row
-        style="width: 100%"
-        border
+      <div class="rightBtn">
+        <el-button type="primary" size="mini" @click.native.prevent="addItem">新增</el-button>
+      </div>
+      <el-form
+        ref="ruleForm"
         size="mini"
       >
-        <el-table-column
-          property="userRuleNm"
-          label="规则"
+        <el-table
+          :data="list"
+          highlight-current-row
+          style="width: 100%"
+          border
+          size="mini"
         >
-          <template slot-scope="scope">
-            <el-form-item :prop="scope.row.userRuleNm">
-              <el-select v-model="scope.row.userRuleNm" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in ruleList"
-                  :key="item.key"
-                  :label="item.name"
-                  :value="item.key"
-                />
-              </el-select>
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column
-          property="taskDefinitionName"
-          label="上一节点"
-        >
-          <template slot-scope="scope">
-            <el-form-item :prop="scope.row.taskDefinitionName">
-              <el-select v-model="scope.row.taskDefinitionName" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in extend.lastNodeList"
-                  :key="item.taskDefinitionKey"
-                  :label="item.taskName"
-                  :value="item.taskDefinitionKey"
-                />
-              </el-select>
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column
-          property="groupNm"
-          label="组织"
-        >
-          <template slot-scope="scope">
-            <el-form-item :prop="scope.row.groupNm">
-              <el-input v-model="scope.row.groupNm" placeholder="组织" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column
-          property="loanOrgLvlNm"
-          label="机构级别"
-        >
-          <template slot-scope="scope">
-            <el-form-item :prop="scope.row.loanOrgLvlNm">
-              <el-select v-model="scope.row.loanOrgLvlNm" clearable placeholder="请选择">
-                <el-option
-                  v-for="item in loanList"
-                  :key="item.key"
-                  :label="item.name"
-                  :value="item.key"
-                />
-              </el-select>
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column
-          property="orgNm"
-          label="机构"
-        >
-          <template slot-scope="scope">
-            <el-form-item :prop="scope.row.orgNm">
-              <el-input v-model="scope.row.orgNm" placeholder="机构" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column
-          property="positionNm"
-          label="岗位"
-        >
-          <template slot-scope="scope">
-            <el-form-item :prop="scope.row.positionNm">
-              <el-input v-model="scope.row.positionNm" placeholder="岗位" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-form-item>
-        <el-button type="primary">保存</el-button>
-        <el-button @click="modalClose">取消</el-button>
-      </el-form-item>
-    </el-form>
-  </el-dialog>
+          <el-table-column
+            property="userRuleNm"
+            label="规则"
+          >
+            <template slot-scope="scope">
+              <el-form-item :prop="scope.row.userRuleNm">
+                <el-select v-model="scope.row.userRuleNm" clearable placeholder="请选择">
+                  <el-option
+                    v-for="item in ruleList"
+                    :key="item.key"
+                    :label="item.name"
+                    :value="item.key"
+                  />
+                </el-select>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="taskDefinitionName"
+            label="上一节点"
+          >
+            <template slot-scope="scope">
+              <el-form-item :prop="scope.row.taskDefinitionName">
+                <el-select v-model="scope.row.taskDefinitionName" clearable placeholder="请选择">
+                  <el-option
+                    v-for="item in extend.lastNodeList"
+                    :key="item.taskDefinitionKey"
+                    :label="item.taskName"
+                    :value="item.taskDefinitionKey"
+                  />
+                </el-select>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="groupNm"
+            label="组织"
+          >
+            <template slot-scope="scope">
+              <el-form-item :prop="scope.row.groupNm">
+                <el-input v-model="scope.row.groupNm" placeholder="组织" @focus="openGroupTree" />
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="loanOrgLvlNm"
+            label="机构级别"
+          >
+            <template slot-scope="scope">
+              <el-form-item :prop="scope.row.loanOrgLvlNm">
+                <el-select v-model="scope.row.loanOrgLvlNm" clearable placeholder="请选择">
+                  <el-option
+                    v-for="item in loanList"
+                    :key="item.key"
+                    :label="item.name"
+                    :value="item.key"
+                  />
+                </el-select>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="orgNm"
+            label="机构"
+          >
+            <template slot-scope="scope">
+              <el-form-item :prop="scope.row.orgNm">
+                <el-input v-model="scope.row.orgNm" placeholder="机构" />
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="positionNm"
+            label="岗位"
+          >
+            <template slot-scope="scope">
+              <el-form-item :prop="scope.row.positionNm">
+                <el-input v-model="scope.row.positionNm" placeholder="岗位" />
+              </el-form-item>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-form-item>
+          <el-button type="primary">保存</el-button>
+          <el-button @click="modalClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <group-tree
+	  :v-if="groupStatus"
+      :visible="groupStatus"
+	  @changeGroupStatus="updateGroupStatus"
+    />
+  </div>
 </template>
 <script>
 import { mapState } from 'vuex'
+import groupTree from '@/views/workflow/define/extend/groupTree'
 export default {
   name: 'ExtendAddList',
   props: {
@@ -119,9 +127,12 @@ export default {
     list: { type: Array },
     primary: { type: String }
   },
+  components: {
+    groupTree
+  },
   data() {
     return {
-
+      groupStatus: false // 组织树弹窗状态
     }
   },
   computed: {
@@ -129,7 +140,6 @@ export default {
   },
   created() {
     this.getLastNode()
-    this.getGroup()
   },
   methods: {
     // 查询上一节点
@@ -138,10 +148,6 @@ export default {
         id: this.primary
       }
       this.$store.dispatch('extend/getLastNode', params)
-    },
-    // 查询上一节点
-    getGroup() {
-      this.$store.dispatch('extend/getGroup')
     },
     // 取消
     modalClose() {
@@ -168,7 +174,14 @@ export default {
       newArray.push(obj)
       console.log('arr', newArray)
       this.$emit('changeArrayNum', newArray)
-    }
+    },
+    // 打开机构树
+    openGroupTree() {
+      this.groupStatus = true
+    },
+	updateGroupStatus(code) {
+	  this.groupStatus = false
+	}
   }
 }
 </script>
