@@ -13,12 +13,12 @@
           <el-menu
             default-active="00"
             class="el-menu-vertical-demo"
-            @select="handleSelect"
             :collapse="isCollapse"
+            @select="handleSelect"
           >
             <el-submenu index="1">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-location"/>
                 <span slot="title">流程分类</span>
               </template>
               <el-menu-item
